@@ -5,7 +5,7 @@ function App() {
   const [SEOChecked, setSEOChecked] = useState(false);
   const [ADSChecked, setADSChecked] = useState(false);
   const [Pages, setPages] = useState(1);
-  const [Idiomas, setIdiomas] = useState (1);
+  const [Idiomas, setIdiomas] = useState(1);
   console.log(WEBChecked, SEOChecked, ADSChecked);
 
   const WEBCheck = () => {
@@ -21,14 +21,24 @@ function App() {
   const [sumaTotal, setsumaTotal] = useState(0);
   console.log(sumaTotal);
 
-  let multiplicacio = Pages * Idiomas * 30 
+  let multiplicacio = Pages * Idiomas * 30;
 
   useEffect(() => {
     setsumaTotal(0);
-    WEBChecked && setsumaTotal((valorActual) => valorActual + 500 + multiplicacio);
+    WEBChecked &&
+      setsumaTotal((valorActual) => valorActual + 500 + multiplicacio);
     SEOChecked && setsumaTotal((valorActual) => valorActual + 300);
     ADSChecked && setsumaTotal((valorActual) => valorActual + 200);
   }, [WEBChecked, SEOChecked, ADSChecked, Pages, Idiomas, multiplicacio]);
+
+  useEffect(() => {
+    localStorage.setItem("WEB", JSON.stringify(WEBChecked));
+    localStorage.setItem("SEO", JSON.stringify(SEOChecked));
+    localStorage.setItem("ADS", JSON.stringify(ADSChecked));
+    localStorage.setItem("Suma total", JSON.stringify(sumaTotal));
+    localStorage.setItem("Pages", JSON.stringify(Pages));
+    localStorage.setItem("Idiomas", JSON.stringify(Idiomas));
+  }, [WEBChecked, SEOChecked, ADSChecked, sumaTotal, Pages, Idiomas]);
 
   return (
     <div>
@@ -44,22 +54,22 @@ function App() {
           onChange={WEBCheck}
         />
         Una página web (500€) <br />
-        {WEBChecked === true && (
+        {WEBChecked && (
           <div>
             <h5>
               Nombre de pàgines:
               <input
                 type={"number"}
-                placeholder = {1}                
+                placeholder={1}
                 onChange={(event) => setPages(event.target.value)}
               />
               <br />
               Nombre d'idiomes:
-              <input 
-              type={"number"}
-              placeholder = {1}
-              onChange={(event) => setIdiomas(event.target.value)}
-             />
+              <input
+                type={"number"}
+                placeholder={1}
+                onChange={(event) => setIdiomas(event.target.value)}
+              />
             </h5>
           </div>
         )}
