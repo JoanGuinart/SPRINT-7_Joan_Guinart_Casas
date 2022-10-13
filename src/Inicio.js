@@ -1,45 +1,54 @@
 import { useState, useEffect } from "react";
+/* import { ModalPop } from "./modal"; */
+import { ModalPop } from "./modal";
 
 export const Inicio = () => {
-  const [WEBChecked, setWEBChecked] = useState(false);
-  const [SEOChecked, setSEOChecked] = useState(false);
-  const [ADSChecked, setADSChecked] = useState(false);
-  const [Pages, setPages] = useState(1);
-  const [Idiomas, setIdiomas] = useState(1);
-  console.log(WEBChecked, SEOChecked, ADSChecked);
+  const [budget, setBudget] = useState({
+    web: false,
+    seo: false,
+    ads: false,
+    pages: 1,
+    lang: 1,
+  });
+  // MODAL POP-UP
+  const [modal, setmodal] = useState(false)
 
-  const WEBCheck = () => {
-    setWEBChecked(!WEBChecked);
-  };
-  const SEOCheck = () => {
-    setSEOChecked(!SEOChecked);
-  };
-  const ADSCheck = () => {
-    setADSChecked(!ADSChecked);
-  };
+  const AbrirCerrarModal = () => {
+    setmodal(!modal)
+  }
+  const [total, setTotal] = useState(0);
 
-  const [sumaTotal, setsumaTotal] = useState(0);
-  console.log(sumaTotal);
-
-  let multiplicacio = Pages * Idiomas * 30;
+  const updateBudget = (field, data) => {
+    let newBudget = { ...budget };
+    let newValue;
+    // Inputs: Values
+    if (typeof data != "boolean") {
+      newValue = data.target.value;
+    }
+    // Checkbox: boolean
+    else {
+      newValue = data;
+    }
+    newBudget[field] = newValue;
+    setBudget(newBudget);
+  };
 
   useEffect(() => {
-    setsumaTotal(0);
-    WEBChecked &&
-      setsumaTotal((valorActual) => valorActual + 500 + multiplicacio);
-    SEOChecked && setsumaTotal((valorActual) => valorActual + 300);
-    ADSChecked && setsumaTotal((valorActual) => valorActual + 200);
-  }, [WEBChecked, SEOChecked, ADSChecked, Pages, Idiomas, multiplicacio]);
+    calculateTotal();
+    saveData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [budget]);
 
-  useEffect(() => {
-    localStorage.setItem("WEB", JSON.stringify(WEBChecked));
-    localStorage.setItem("SEO", JSON.stringify(SEOChecked));
-    localStorage.setItem("ADS", JSON.stringify(ADSChecked));
-    localStorage.setItem("Suma total", JSON.stringify(sumaTotal));
-    localStorage.setItem("Pages", JSON.stringify(Pages));
-    localStorage.setItem("Idiomas", JSON.stringify(Idiomas));
-  }, [WEBChecked, SEOChecked, ADSChecked, sumaTotal, Pages, Idiomas]);
+  const calculateTotal = () => {
+    let pagesLang = budget.pages * budget.lang * 30;
+    let newTotal =
+      (budget.web && 500) + (budget.seo && 300) + (budget.ads && 200);
+    setTotal(newTotal + pagesLang);
+  };
 
+  const saveData = () => {
+    localStorage.setItem("budgetSaved", JSON.stringify(budget));
+  };
   return (
     <div>
       <ul>
@@ -50,29 +59,40 @@ export const Inicio = () => {
           type="checkbox"
           value="500"
           name="WEB"
-          checked={WEBChecked}
-          onChange={WEBCheck}
+          checked={budget.web}
+          onChange={() => updateBudget("web", !budget.web)}
         />
         Una página WEB (500€) <br />
-        {WEBChecked && (
+        {budget.web && (
           <div>
-            <h5>
+            <div>
               Nombre de pàgines:
               <input
                 className="border border-5 rounded-pill"
                 type={"number"}
                 placeholder={1}
-                onChange={(event) => setPages(event.target.value)}
+                value={budget.pages}
+                onChange={(event) => updateBudget("pages", event)}
               />
+              <button onClick={ () => AbrirCerrarModal()} className = "btn btn-outline-secondary rounded-pill">i</button>
+              {modal &&
+              <ModalPop cerrarModal={AbrirCerrarModal}/> 
+              }      
+
               <br />
               Nombre d'idiomes:
               <input
                 className="border border-5 rounded-pill"
                 type={"number"}
                 placeholder={1}
-                onChange={(event) => setIdiomas(event.target.value)}
+                value={budget.lang}
+                onChange={(event) => updateBudget("lang", event)}
               />
-            </h5>
+              <button onClick={ () => AbrirCerrarModal()}  className = "btn btn-outline-secondary rounded-pill">i</button>
+              {modal &&
+              <ModalPop cerrarModal={AbrirCerrarModal}/> 
+              } 
+            </div>
           </div>
         )}
       </ul>
@@ -81,8 +101,8 @@ export const Inicio = () => {
           type="checkbox"
           value="300"
           name="SEO"
-          checked={SEOChecked}
-          onChange={SEOCheck}
+          checked={budget.seo}
+          onChange={() => updateBudget("seo", !budget.seo)}
         />
         Una consulta SEO (300€) <br />
       </ul>
@@ -91,13 +111,13 @@ export const Inicio = () => {
           type="checkbox"
           value="200"
           name="GOOGLEADS"
-          checked={ADSChecked}
-          onChange={ADSCheck}
+          checked={budget.ads}
+          onChange={() => updateBudget("ads", !budget.ads)}
         />
         Una campaña Google ADS (200€) <br />
       </ul>
 
-      <ul>Total: {sumaTotal} </ul>
+      <ul>Total: {total} </ul>
     </div>
   );
 };

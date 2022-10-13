@@ -1,7 +1,7 @@
 export const Welcome = () => {
   return (
     <div className="bg-light">
-      <h1 className="text-center" >Benvinguts</h1>
+      <h1 className="text-center">Benvinguts</h1>
       <h5 className="text-info text-center">
         En aquest lliurament realitzarem una aplicació per calcular el
         pressupost d'una pàgina web, afegint més interaccions amb l'usuari/ària
