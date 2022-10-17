@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
 /* import { ModalPop } from "./modal"; */
 import { ModalPop } from "./modal";
+import { Boton, /* BotonMasMenos */ } from "./style";
 
 export const Inicio = () => {
   const [budget, setBudget] = useState({
     web: false,
     seo: false,
     ads: false,
-    pages: 1,
+    pages: 3,
     lang: 1,
   });
   // MODAL POP-UP
-  const [modal, setmodal] = useState(false)
+  const [modal, setmodal] = useState(false);
 
   const AbrirCerrarModal = () => {
-    setmodal(!modal)
-  }
+    setmodal(!modal);
+  };
   const [total, setTotal] = useState(0);
 
   const updateBudget = (field, data) => {
@@ -49,6 +50,17 @@ export const Inicio = () => {
   const saveData = () => {
     localStorage.setItem("budgetSaved", JSON.stringify(budget));
   };
+
+  /* const decrementCount = () => {
+    setBudget(budget.pages--);
+    console.log(budget.pages);
+  };
+
+  const incrementCount = () => {
+    setBudget(budget.pages++);
+    console.log(budget.pages);
+  };
+ */
   return (
     <div>
       <ul>
@@ -67,6 +79,7 @@ export const Inicio = () => {
           <div>
             <div>
               Nombre de pàgines:
+              {/* <BotonMasMenos onClick={() => decrementCount()}>-</BotonMasMenos> */}
               <input
                 className="border border-5 rounded-pill"
                 type={"number"}
@@ -74,12 +87,12 @@ export const Inicio = () => {
                 value={budget.pages}
                 onChange={(event) => updateBudget("pages", event)}
               />
-              <button onClick={ () => AbrirCerrarModal()} className = "btn btn-outline-secondary rounded-pill">i</button>
-              {modal &&
-              <ModalPop cerrarModal={AbrirCerrarModal}/> 
-              }      
-
+              {/* <BotonMasMenos onClick={() => incrementCount()}>+</BotonMasMenos> */}
+              <Boton onClick={() => AbrirCerrarModal()}>i</Boton>
+              {modal && <ModalPop cerrarModal={AbrirCerrarModal} />}
               <br />
+
+              
               Nombre d'idiomes:
               <input
                 className="border border-5 rounded-pill"
@@ -88,10 +101,8 @@ export const Inicio = () => {
                 value={budget.lang}
                 onChange={(event) => updateBudget("lang", event)}
               />
-              <button onClick={ () => AbrirCerrarModal()}  className = "btn btn-outline-secondary rounded-pill">i</button>
-              {modal &&
-              <ModalPop cerrarModal={AbrirCerrarModal}/> 
-              } 
+              <Boton onClick={() => AbrirCerrarModal()}>i</Boton>
+              {modal && <ModalPop cerrarModal={AbrirCerrarModal} />}
             </div>
           </div>
         )}
