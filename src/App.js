@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import { Welcome } from "./Welcome";
-import { Inicio } from "./Inicio";
+import { Welcome } from "./components/Welcome";
+import { Inicio } from "./components/Inicio";
 
 export function App() {
   return (
